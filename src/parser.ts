@@ -1,0 +1,200 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { Argv, Options, Arrayable, Mapped } from './types';
+import { isFlag, isLongFlag, isShortFlag, toKebabCase, isNumericLike, toCamelCase } from './utils';
+
+/**
+ * Default options.
+ */
+const defaultOptions = {
+    parseNumber: true,
+    shortFlagGroup: true,
+    camelize: false
+} as Options;
+
+/**
+ * Parse value based on provided options.
+ * @param {string} val Value to convert.
+ * @param {Options} options Options which the given value will be based upon.
+ * @private
+ */
+function parseValue(val: any, options: Options): any {
+    if (options.parseNumber && isNumericLike(val)) return Number.parseFloat(val);
+
+    return val;
+}
+
+/**
+ * Looks for options from given alias.
+ * @param {string} val Alias to look for.
+ * @param {Mapped} alias Aliases.
+ * @returns {string | undefined}
+ * @private
+ */
+function getAlias(val: string, alias: Mapped): string | undefined {
+    if (!isShortFlag(val)) return;
+
+    val = val.slice(1); // remove first hyphen
+
+    const aliases = Object.entries(alias);
+
+    for (const [alias_, aliasVal] of aliases) {
+        if (Array.isArray(aliasVal) && aliasVal.includes(val)) return '--' + alias_;
+        if (typeof(aliasVal) === 'string' && aliasVal === val) return '--' + alias_;
+    }
+}
+
+/**
+ * Parse command-line arguments.
+ *
+ * @param {Arrayable<string>} args Arguments to parse (e.g., `process.argv.slice(2)`).
+ * @param {Options} [options] Options for parsing given arguments.
+ * @returns {Argv} Parsed arguments.
+ *
+ * @example
+ * ```ts
+ * import { parse } from 'ofi';
+ *
+ * parse(process.argv.slice(2), {
+ *      number: ['size'],
+ *      string: ['foo', 'name', 'surname'],
+ *      boolean: ['dice', 'friendly'],
+ *      array: ['list', 'my-numbers'],
+ *      alias: { foo: ['f'] },
+ *      default: { surname: 'obama', list: [] }
+ * });
+ * ```
+ *
+ * This would give the following results:
+ *
+ * `node program.js --size=3 --name barack -f baz --no-dice --friendly`:
+ * ```json
+ * {
+ *   _: [],
+ *   size: 3,
+ *   name: 'barack',
+ *   surname: 'obama',
+ *   foo: 'baz',
+ *   dice: false,
+ *   list: [],
+ *   friendly: true
+ * }
+ * ```
+ *
+ * `node program.js --list a b c -N hi there --myNumbers=13,1,2,3 -fas`:
+ * ```json
+ * {
+ *   _: ['hi', 'there'],
+ *   surname: 'obama',
+ *   list: [ 'a', 'b', 'c' ],
+ *   N: true,
+ *   'my-numbers': [ 13, 1, 2, 3 ],
+ *   foo: true,
+ *   a: true,
+ *   s: true
+ * }
+ * ```
+ */
+export default function parse(args: Arrayable<string>, options: Options = {}): Argv {
+    options = { ...defaultOptions, ...options };
+
+    const result: Argv = { _: [] };
+    const defaults = options.default || {};
+    const alias = options.alias || {};
+    const camelize = options.camelize ? toCamelCase : (str: string) => str;
+
+    if (typeof(args) === 'string') args = args.split(' ');
+
+    let i = 0;
+    let arg = '';
+
+    /**
+     * Get value of a flag if exists.
+     * @returns {string | undefined}
+     */
+    function getNext(): string | undefined {
+        if (arg.split('=').length > 1) return arg.split('=')[1];
+        if (args[i + 1] && !isFlag(args[i + 1])) {
+            i++; // skip key
+            return args[i];
+        }
+    }
+
+    for (; i < args.length; i++) {
+        arg = getAlias(args[i].split('=')[0], alias) || args[i].split('=')[0];
+
+        if (args[i].split('=')[1]) arg += '=' + args[i].split('=')[1];
+
+        if (!isFlag(args[i])) {
+            result._.push(parseValue(args[i], options));
+        } else if (isLongFlag(arg)) {
+            // Long option (e.g., --option or --option=value)
+            // Use double hyphen (`--`) to signal the end of command-line options.
+            if (arg === '--') {
+                result._.push(...args.slice(i + 1).map(val => parseValue(val, options)));
+                break;
+            }
+
+            const [name, value] = arg.slice(2).split('=');
+            const opt = toKebabCase(name);
+            const res = camelize(opt);
+            const next = value || args[i + 1];
+
+            if (options.boolean?.includes(opt.replace(/^no-/, ''))) {
+                if (opt.startsWith('no-')) {
+                    // For options like --no-something or --noSomething, set the boolean value to false
+                    result[camelize(opt.replace(/^no-/, ''))] = false;
+                } else {
+                    // Set the value based on the input
+                    result[res] = next && !isFlag(next) ? getNext()!.toLowerCase() === 'true' : true;
+                }
+            } else if (options.number?.includes(opt)) {
+                if (!isNumericLike(next)) continue;
+
+                result[res] = Number.parseFloat(getNext()!);
+            } else if (options.string?.includes(opt)) {
+                if (!getNext()) continue;
+
+                result[res] = String(next);
+            } else if (options.array?.includes(opt)) {
+                if (!next) continue;
+
+                if (value) {
+                    result[res] = value.split(',').map(val => parseValue(val, options));
+                    continue;
+                }
+
+                while (!!args[i + 1] && !isFlag(args[i + 1])) {
+                    if (!Array.isArray(result[opt])) result[opt] = [];
+                    i++;
+                    result[res].push(parseValue(args[i], options));
+                }
+
+                result[res] = result[res] || defaults[opt] || defaults[res];
+            } else {
+                result[res] = parseValue(getNext(), options) || defaults[opt] || defaults[res];
+            }
+        } else if (isShortFlag(arg)) {
+            // Short option (e.g., -f)
+            // These are gonna be automatically converted into booleans.
+            arg = arg.split('=')[0];
+
+            if (!options.shortFlagGroup) {
+                result[arg.slice(1)] = true;
+                continue;
+            }
+
+            // leave only alphabetical (including other languages) and numerical characters
+            arg = arg.replaceAll(/[^\dA-Za-z\u00C0-\u1FFF\u2C00-\uD7FF]/g, '');
+
+            // An arg like `-abc` will return `{ a: true, b: true, c: true}`.
+            for (let j = 0; j < arg.length; j++) {
+                const opt = getAlias('-' + arg[j], alias) || arg[j];
+                result[camelize(opt.replace(/^-+/, ''))] = true;
+            }
+        }
+    }
+
+    return Object.assign(defaults, result);
+}
+
+export { parse };

@@ -1,0 +1,48 @@
+{
+  "name": "ofi",
+  "version": "0.0.0",
+  "description": "Yet another arguments parser",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "repository": "mrozio13pl/ofi",
+  "author": "mrozio13pl",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsup src/index.ts --clean --dts --minify  --format esm,cjs && node scripts/size.mjs",
+    "test": "uvu test .test.js$"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "cli",
+    "args",
+    "parser",
+    "options",
+    "command",
+    "cmd",
+    "yargs",
+    "commander",
+    "sade",
+    "opt",
+    "argv"
+  ],
+  "devDependencies": {
+    "@mrozio/eslint-config": "^1.0.1",
+    "eslint": "^8.51.0",
+    "fast-folder-size": "^2.2.0",
+    "pretty-bytes": "^6.1.1",
+    "tsup": "^7.2.0",
+    "typescript": "^5.2.2",
+    "uvu": "^0.5.6"
+  },
+  "packageManager": "^pnpm@8.9.0"
+}

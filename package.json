@@ -1,6 +1,6 @@
 {
   "name": "ofi",
-  "version": "0.0.0",
+  "version": "1.0.1",
   "description": "Yet another arguments parser",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -16,7 +16,7 @@
   "author": "mrozio13pl",
   "license": "MIT",
   "scripts": {
-    "build": "tsup src/index.ts --clean --dts --minify  --format esm,cjs && node scripts/size.mjs",
+    "build": "tsup src/index.ts --clean --dts --minify --format esm,cjs && node scripts/size.mjs",
     "test": "uvu test .test.js$"
   },
   "files": [

@@ -17,7 +17,7 @@ export declare interface Options {
      * ```
      * `node program.js --x --y=true --no-dice`:
      *
-     * ```json
+     * ```js
      * { _: [], x: true, y: true, dice: false }
      * ```
      */
@@ -35,7 +35,7 @@ export declare interface Options {
      * ```
      * `node program.js --name=joe --surname mama`:
      *
-     * ```json
+     * ```js
      * { _: [], name: 'joe', surname: 'mama' }
      * ```
      */
@@ -53,7 +53,7 @@ export declare interface Options {
      * ```
      * `node program.js --x=3 --y 90.3`:
      *
-     * ```json
+     * ```js
      * { _: [], x: 3, y: 90.3 }
      * ```
      */
@@ -71,7 +71,7 @@ export declare interface Options {
      * ```
      * `node program.js --foo=1,2,3,4 --bar a b c`:
      *
-     * ```json
+     * ```js
      * { _: [], foo: [1, 2, 3, 4], bar: ['a', 'b', 'c'] }
      * ```
      */
@@ -88,7 +88,7 @@ export declare interface Options {
      * ```
      * `node program.js`:
      *
-     * ```json
+     * ```js
      * { name: 'joe', _: [] }
      * ```
      */
@@ -106,7 +106,7 @@ export declare interface Options {
      * ```
      * `node program.js -f -b 123`:
      *
-     * ```json
+     * ```js
      * { _: [], foo: true, bar: 123 }
      * ```
      */
@@ -122,7 +122,7 @@ export declare interface Options {
      * Default: `true`
      * @example
      * `-abc`:
-     * ```json
+     * ```js
      * { a: true, b: true, c: true }
      * ```
      */
@@ -132,7 +132,7 @@ export declare interface Options {
      * Default: `false`
      * @example
      * `--test-case 1`:
-     * ```json
+     * ```js
      * { testCase: 1 }
      * ```
      */
@@ -153,7 +153,7 @@ export declare interface Options {
      * ```
      * `node program.js --foo`:
      *
-     * ```json
+     * ```js
      * { _: [], foo: 'banana' }
      * ```
      */
@@ -161,9 +161,12 @@ export declare interface Options {
 }
 
 /**
- * Parsed args.
+ * Parsed arguments.
  */
 export declare type Argv = Anyable<string> & {
+    /**
+     * Arguments that weren't associated with any option.
+     */
     _: string[];
 }
 

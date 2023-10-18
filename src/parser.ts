@@ -67,7 +67,7 @@ function getAlias(val: string, alias: Mapped<Arrayable<string>>): string | undef
  * This would give the following results:
  *
  * `node program.js --size=3 --name barack -f baz --no-dice --friendly`:
- * ```json
+ * ```js
  * {
  *   _: [],
  *   size: 3,
@@ -81,7 +81,7 @@ function getAlias(val: string, alias: Mapped<Arrayable<string>>): string | undef
  * ```
  *
  * `node program.js --list a b c -N hi there --myNumbers=13,1,2,3 -fas`:
- * ```json
+ * ```js
  * {
  *   _: ['hi', 'there'],
  *   surname: 'obama',

@@ -8,7 +8,7 @@ export function isFlag(str: string): boolean {
 }
 
 /**
- * Check if a value is a short flag. (e.g., `-f`,)
+ * Check if a value is a short flag. (e.g., `-f`)
  * @param {string} str String to check.
  * @returns {boolean}
  */
@@ -50,7 +50,6 @@ export function toCamelCase(str: string): string {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isNumericLike(value: any): boolean {
-    if (typeof value === 'string') value = value.trim();
     if (typeof value === 'number' || typeof value === 'string') {
         // eslint-disable-next-line unicorn/prefer-number-properties
         return !isNaN(Number(value));

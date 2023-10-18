@@ -71,7 +71,7 @@ $ node program.js --list a b c -N hi there --myNumbers=13,1,2,3 -fas
 Function that parses given arguments.<br>
 Returns an argument object `argv` which contains all parsed flags.
 
-`argv._` includes all arguments that weren't assiociated with any option.<br>
+`argv._` includes all arguments that weren't associated with any option.<br>
 Any argument after `--` won't be parsed and will end up in `argv._`.
 
 #### `arguments`
@@ -159,6 +159,16 @@ Convert results to camel-case.
 
 Type: `boolean`<br>
 Default: `false`
+
+##### `coerce`
+Custom synchronous function for parsing provided argument.
+
+Type: `object`<br>
+Default: `undefined`
+
+```js
+{ coerce: { len: (arg) => arg + ' cm' } }
+```
 
 ## License
 

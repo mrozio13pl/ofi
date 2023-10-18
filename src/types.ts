@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type Arrayable<T> = T | T[];
-type Mapped = Record<string, Arrayable<string>>;
+type Mapped<T> = Record<string, T>;
 type Anyable<T extends string | number | symbol> = Record<T, any>;
 
 export declare interface Options {
@@ -92,7 +92,7 @@ export declare interface Options {
      * { name: 'joe', _: [] }
      * ```
      */
-    default?: Mapped;
+    default?: Mapped<Arrayable<string>>;
     /**
      * Set aliases of options.
      * @example
@@ -110,7 +110,7 @@ export declare interface Options {
      * { _: [], foo: true, bar: 123 }
      * ```
      */
-    alias?: Mapped;
+    alias?: Mapped<Arrayable<string>>;
     /**
      * Should values that look like numbers be parsed into them.
      * This doesn't apply to strings.
@@ -137,6 +137,27 @@ export declare interface Options {
      * ```
      */
     camelize?: boolean;
+    /**
+     * Custom synchronous function for parsing provided argument.
+     * Default: `undefined`
+     * @example
+     * ```ts
+     * import { parse } from 'ofi';
+     *
+     * parse(process.argv.slice(2), {
+     *      boolean: ['foo'],
+     *      coerce: {
+     *          foo: (arg) => arg ? 'banana' : 'plum'
+     *      }
+     * });
+     * ```
+     * `node program.js --foo`:
+     *
+     * ```json
+     * { _: [], foo: 'banana' }
+     * ```
+     */
+    coerce?: Mapped<(value: any) => any>;
 }
 
 /**

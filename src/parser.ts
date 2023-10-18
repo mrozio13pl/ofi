@@ -26,11 +26,11 @@ function parseValue(val: any, options: Options): any {
 /**
  * Looks for options from given alias.
  * @param {string} val Alias to look for.
- * @param {Mapped} alias Aliases.
+ * @param {Mapped<Arrayable<string>>} alias Aliases.
  * @returns {string | undefined}
  * @private
  */
-function getAlias(val: string, alias: Mapped): string | undefined {
+function getAlias(val: string, alias: Mapped<Arrayable<string>>): string | undefined {
     if (!isShortFlag(val)) return;
 
     val = val.slice(1); // remove first hyphen
@@ -100,6 +100,7 @@ export default function parse(args: Arrayable<string>, options: Options = {}): A
     const result: Argv = { _: [] };
     const defaults = options.default || {};
     const alias = options.alias || {};
+    const coerce = options.coerce || {};
     const camelize = options.camelize ? toCamelCase : (str: string) => str;
 
     if (typeof(args) === 'string') args = args.split(' ');
@@ -191,6 +192,13 @@ export default function parse(args: Arrayable<string>, options: Options = {}): A
                 const opt = getAlias('-' + arg[j], alias) || arg[j];
                 result[camelize(opt.replace(/^-+/, ''))] = true;
             }
+        }
+    }
+
+    // Convert coerce functions.
+    for (const flag in coerce) {
+        if (result[flag] !== void 0 && typeof(coerce[flag]) === 'function') {
+            result[flag] = coerce[flag](result[flag]);
         }
     }
 

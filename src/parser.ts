@@ -105,15 +105,18 @@ export default function parse(args: Arrayable<string>, options: Options = {}): A
 
     if (typeof(args) === 'string') args = args.split(' ');
 
+    // this is meant to filter out eg. empty spaces
+    args = args.filter(Boolean);
+
     let i = 0;
-    let arg = '';
+    let arg: string;
 
     /**
      * Get value of a flag if exists.
      * @returns {string | undefined}
      */
     function getNext(): string | undefined {
-        if (arg.split('=').length > 1) return arg.split('=')[1];
+        if (arg.split('=')[1]) return arg.split('=')[1];
         if (args[i + 1] && !isFlag(args[i + 1])) {
             i++; // skip key
             return args[i];

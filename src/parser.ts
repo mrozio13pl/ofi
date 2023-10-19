@@ -94,7 +94,7 @@ function getAlias(val: string, alias: Mapped<Arrayable<string>>): string | undef
  * }
  * ```
  */
-export default function parse(args: Arrayable<string>, options: Options = {}): Argv {
+export function parse(args: Arrayable<string>, options: Options = {}): Argv {
     options = { ...defaultOptions, ...options };
 
     const result: Argv = { _: [] };
@@ -215,5 +215,3 @@ export default function parse(args: Arrayable<string>, options: Options = {}): A
 
     return Object.assign(defaults, result);
 }
-
-export { parse };

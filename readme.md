@@ -142,7 +142,7 @@ Type: `Object`
 ##### `parseNumber`
 Should values that look like numbers be parsed into them.
 
-Type: `boolean`<br>
+Type: `Boolean`<br>
 Default: `true`
 
 **NOTE**: This doesn't apply to flags marked as strings.
@@ -151,19 +151,19 @@ Default: `true`
 Should a group of short options be treated as seperate flags.<br>
 Example: `-abc` -> `{ a: true, b: true, c: true }`
 
-Type: `boolean`<br>
+Type: `Boolean`<br>
 Default: `true`
 
 ##### `camelize`
 Convert results to camel-case.
 
-Type: `boolean`<br>
+Type: `Boolean`<br>
 Default: `false`
 
 ##### `coerce`
 Custom synchronous function for parsing provided argument.
 
-Type: `object`<br>
+Type: `Object`<br>
 Default: `undefined`
 
 ```js
@@ -174,7 +174,7 @@ Default: `undefined`
 
 Callback function that runs whenever a parsed flag has not been defined in options.
 
-Type: `function`<br>
+Type: `Function`<br>
 Default: `undefined`
 
 ```js

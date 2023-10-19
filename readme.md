@@ -170,6 +170,17 @@ Default: `undefined`
 { coerce: { len: (arg) => arg + ' cm' } }
 ```
 
+##### `unknown`
+
+Callback function that runs whenever a parsed flag has not been defined in options.
+
+Type: `function`<br>
+Default: `undefined`
+
+```js
+{ unknown: function (flag) { console.log('Unknown flag: "%s"', flag); } }
+```
+
 ## License
 
 MIT 💖

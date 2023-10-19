@@ -163,7 +163,7 @@ export declare interface Options {
      */
     coerce?: Mapped<(value: any) => any>;
     /**
-     * Callback function that runs whenever a parsed flag has been not defined in options.
+     * Callback function that runs whenever a parsed flag has not been defined in options.
      *
      * Default: `undefined`
      * @param {string} flag Unknown flag.

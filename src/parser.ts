@@ -103,6 +103,9 @@ export default function parse(args: Arrayable<string>, options: Options = {}): A
     const coerce = options.coerce || {};
     const camelize = options.camelize ? toCamelCase : (str: string) => str;
 
+    // get every single flag
+    const flags = [...Object.keys(defaults), ...Object.keys(coerce), ...Object.values(options).flat().filter(val => typeof(val) === 'string')].map(toCamelCase);
+
     if (typeof(args) === 'string') args = args.split(' ');
 
     // this is meant to filter out eg. empty spaces
@@ -130,7 +133,12 @@ export default function parse(args: Arrayable<string>, options: Options = {}): A
 
         if (!isFlag(args[i])) {
             result._.push(parseValue(args[i], options));
-        } else if (isLongFlag(arg)) {
+            continue;
+        }
+        if (typeof(options.unknown) === 'function' && !getAlias(arg, alias) && !flags.includes(arg.replaceAll('-', ''))) {
+            options.unknown(args[i].split('=')[0]);
+        }
+        if (isLongFlag(arg)) {
             // Long option (e.g., --option or --option=value)
             // Use double hyphen (`--`) to signal the end of command-line options.
             if (arg === '--') {

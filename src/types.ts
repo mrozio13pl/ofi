@@ -114,11 +114,13 @@ export declare interface Options {
     /**
      * Should values that look like numbers be parsed into them.
      * This doesn't apply to strings.
+     *
      * Default: `true`
      */
     parseNumber?: boolean;
     /**
      * Should a group of short options be treated as seperate flags.
+     *
      * Default: `true`
      * @example
      * `-abc`:
@@ -129,6 +131,7 @@ export declare interface Options {
     shortFlagGroup?: boolean;
     /**
      * Convert results to camel-case.
+     *
      * Default: `false`
      * @example
      * `--test-case 1`:
@@ -139,6 +142,7 @@ export declare interface Options {
     camelize?: boolean;
     /**
      * Custom synchronous function for parsing provided argument.
+     *
      * Default: `undefined`
      * @example
      * ```ts
@@ -158,6 +162,29 @@ export declare interface Options {
      * ```
      */
     coerce?: Mapped<(value: any) => any>;
+    /**
+     * Callback function that runs whenever a parsed flag has been not defined in options.
+     *
+     * Default: `undefined`
+     * @param {string} flag Unknown flag.
+     * @example
+     * ```ts
+     * import { parse } from 'ofi';
+     *
+     * parse(process.argv.slice(2), {
+     *      boolean: ['foo'],
+     *      unknown: function (flag) {
+     *          console.log('Unknown flag: "%s"', flag);
+     *      }
+     * });
+     * ```
+     * `node program.js --foo --baz`:
+     *
+     * ```markdown
+     * Unknown flag: "--baz"
+     * ```
+     */
+    unknown?: (flag: string) => any;
 }
 
 /**

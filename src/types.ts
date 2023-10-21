@@ -92,7 +92,7 @@ export declare interface Options {
      * { name: 'joe', _: [] }
      * ```
      */
-    default?: Mapped<Arrayable<string>>;
+    default?: Mapped<Arrayable<any>>;
     /**
      * Set aliases of options.
      * @example

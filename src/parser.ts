@@ -106,7 +106,7 @@ export function parse(args: Arrayable<string>, options: Options = {}): Argv {
     // get every single flag
     const flags = [...Object.keys(defaults), ...Object.keys(coerce), ...Object.values(options).flat().filter(val => typeof(val) === 'string')].map(toCamelCase);
 
-    if (typeof(args) === 'string') args = args.split(' ');
+    if (typeof(args) === 'string') args = args.match(/"([^"]+)"|(\S+)/g)?.map(arg => arg.replaceAll(/(^"|"$)/g, '')) || args.split(/(\s+)/);
 
     // this is meant to filter out eg. empty spaces
     args = args.filter(Boolean);

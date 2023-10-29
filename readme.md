@@ -1,12 +1,16 @@
 # ofi
 
+[![npm][npm-version]][npm-link]
+[![npm bundle size][bundle-size]][bundlephobia]
+[![License][license]](./license)
+
 > Yet another argument parser.
 
 A tiny cli flags parser.
 
 ## Install
 
-```
+```bash
 npm i ofi
 ```
 
@@ -68,14 +72,14 @@ $ node program.js --list a b c -N hi there --myNumbers=13,1,2,3 -fas
 ## API
 
 ### `parse(arguments, options?)`
-Function that parses given arguments.<br>
+Function that parses given arguments.\
 Returns an argument object `argv` which contains all parsed flags.
 
-`argv._` includes all arguments that weren't associated with any option.<br>
-Any argument after `--` won't be parsed and will end up in `argv._`.
+`argv._` includes all arguments that weren't associated with any option.\
+Any argument after `--` ([end-of-flags](https://unix.stackexchange.com/questions/11376/what-does-double-dash-mean)) won't be parsed and will end up in `argv._` and `argv['--']` if [`populate--`](#populate) option is set to `true`.
 
 #### `arguments`
-Type: `String | Array<String>`<br>
+Type: `String | Array<String>`\
 String or an array of strings to be parsed.
 
 For example:
@@ -87,20 +91,20 @@ parse(process.argv.slice(2));
 
 #### `options`
 
-Type: `Object`<br>
+Type: `Object`\
 Options for parsing given arguments.
 
 ##### `boolean`
-Arguments that should be parsed as booleans.<br>
+Arguments that should be parsed as booleans.\
 Type: `String | Array<String>`
 
 ```js
 { boolean: ['dice'] }
 ```
-Booleans prefixed with `--no` will be treated as negations.<br>
+Booleans prefixed with `--no` will be treated as negations.\
 
 ##### `string`
-Arguments that should be parsed as strings.<br>
+Arguments that should be parsed as strings.\
 Type: `String | Array<String>`
 
 ```js
@@ -108,7 +112,7 @@ Type: `String | Array<String>`
 ```
 
 ##### `number`
-Arguments that should be parsed as numbers.<br>
+Arguments that should be parsed as numbers.\
 Type: `String | Array<String>`
 
 ```js
@@ -116,7 +120,7 @@ Type: `String | Array<String>`
 ```
 
 ##### `array`
-Arguments that should be parsed as arrays.<br>
+Arguments that should be parsed as arrays.\
 Type: `String | Array<String>`
 
 ```js
@@ -124,7 +128,7 @@ Type: `String | Array<String>`
 ```
 
 ##### `default`
-Set default values.<br>
+Set default values.\
 Type: `Object`
 
 ```js
@@ -132,38 +136,45 @@ Type: `Object`
 ```
 
 ##### `alias`
-Set aliases of options.<br>
+Set aliases of options.\
 Type: `Object`
 
 ```js
 { alias: { foo: ['f'], baz: 'b' } }
 ```
 
+##### `populate--`
+
+Populate `'--'` property in `Argv` with everything after double-dash (`--`, aka. end-of-flags).
+
+Type: `Boolean`\
+Default: `false`
+
 ##### `parseNumber`
 Should values that look like numbers be parsed into them.
 
-Type: `Boolean`<br>
+Type: `Boolean`\
 Default: `true`
 
 **NOTE**: This doesn't apply to flags marked as strings.
 
 ##### `shortFlagGroup`
-Should a group of short options be treated as seperate flags.<br>
+Should a group of short options be treated as seperate flags.\
 Example: `-abc` -> `{ a: true, b: true, c: true }`
 
-Type: `Boolean`<br>
+Type: `Boolean`\
 Default: `true`
 
 ##### `camelize`
 Convert results to camel-case.
 
-Type: `Boolean`<br>
+Type: `Boolean`\
 Default: `false`
 
 ##### `coerce`
 Custom synchronous function for parsing provided argument.
 
-Type: `Object`<br>
+Type: `Object`\
 Default: `undefined`
 
 ```js
@@ -174,7 +185,7 @@ Default: `undefined`
 
 Callback function that runs whenever a parsed flag has not been defined in options.
 
-Type: `Function`<br>
+Type: `Function`\
 Default: `undefined`
 
 ```js
@@ -184,3 +195,10 @@ Default: `undefined`
 ## License
 
 MIT 💖
+
+<!-- badges -->
+[npm-link]: https://npmjs.com/package/ofi
+[npm-version]: https://img.shields.io/npm/v/ofi?labelColor=000&color=57B759
+[bundle-size]: https://img.shields.io/bundlephobia/min/ofi?labelColor=000&color=57B759
+[bundlephobia]: https://bundlephobia.com/package/ofi
+[license]: https://img.shields.io/npm/l/ofi?labelColor=000&color=57B759

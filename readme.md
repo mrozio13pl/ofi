@@ -76,7 +76,7 @@ Function that parses given arguments.\
 Returns an argument object `argv` which contains all parsed flags.
 
 `argv._` includes all arguments that weren't associated with any option.\
-Any argument after `--` ([end-of-flags](https://unix.stackexchange.com/questions/11376/what-does-double-dash-mean)) won't be parsed and will end up in `argv._` and `argv['--']` if [`populate--`](#populate) option is set to `true`.
+Any argument after `--` ([end-of-flags](https://unix.stackexchange.com/questions/11376/what-does-double-dash-mean)) won't be parsed and will end up in `argv._` and `argv['--']` if [`populate--`](#populate--) option is set to `true`.
 
 #### `arguments`
 Type: `String | Array<String>`\

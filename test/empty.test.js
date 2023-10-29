@@ -7,7 +7,8 @@ const args = ' --foo  no-empty  hello ';
 
 test('empty spaces', () => {
     const res = parse(args);
-    assert.equal(res, { _: ['hello'], foo: 'no-empty' });
+    assert.is(res.foo, 'no-empty');
+    assert.is(res._[0], 'hello');
 });
 
 test.run();

@@ -22,13 +22,15 @@ test('complexity test', () => {
         array: ['array'],
         alias: { 'alias-a': 'a', 'alias-b': 'b' },
         shortFlagGroup: true,
-        camelize: true
+        camelize: true,
+        'populate--': true
     };
     
     const result = parse(args, options);
     
     assert.equal(result, {
         _: ['k=123'],
+        '--': [],
         x: true,
         y: true,
         dice: false,

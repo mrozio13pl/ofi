@@ -8,7 +8,8 @@ import { isFlag, isLongFlag, isShortFlag, toKebabCase, isNumericLike, toCamelCas
 const defaultOptions = {
     parseNumber: true,
     shortFlagGroup: true,
-    camelize: false
+    camelize: false,
+    'populate--': false
 } as Options;
 
 /**
@@ -94,7 +95,7 @@ function getAlias(val: string, alias: Mapped<Arrayable<string>>): string | undef
  * }
  * ```
  */
-export function parse(args: Arrayable<string>, options: Options = {}): Argv {
+export function parse<T extends Options>(args: Arrayable<string>, options: T): Argv<T['populate--'] extends boolean ? T['populate--'] : false> {
     options = { ...defaultOptions, ...options };
 
     const result: Argv = { _: [] };
@@ -110,6 +111,9 @@ export function parse(args: Arrayable<string>, options: Options = {}): Argv {
 
     // this is meant to filter out eg. empty spaces
     args = args.filter(Boolean);
+
+    // populate '--'
+    if (options['populate--']) result['--'] = [];
 
     let i = 0;
     let arg: string;
@@ -142,7 +146,9 @@ export function parse(args: Arrayable<string>, options: Options = {}): Argv {
             // Long option (e.g., --option or --option=value)
             // Use double hyphen (`--`) to signal the end of command-line options.
             if (arg === '--') {
-                result._.push(...args.slice(i + 1).map(val => parseValue(val, options)));
+                const rest = args.slice(i + 1).map(val => parseValue(val, options));
+                result._.push(...rest);
+                options['populate--'] && result['--'].push(...rest);
                 break;
             }
 
@@ -213,5 +219,5 @@ export function parse(args: Arrayable<string>, options: Options = {}): Argv {
         }
     }
 
-    return Object.assign(defaults, result);
+    return Object.assign(defaults, result) as Argv<T['populate--']>;
 }

@@ -12,7 +12,7 @@ test('number', () => {
 
     assert.is(res.x, 3);
     assert.is(res.y, 90.3);
-    assert.equal(res._, []);
+    assert.is(res._.length, 0);
 });
 
 test.run();

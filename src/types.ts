@@ -22,6 +22,7 @@ export declare interface Options {
      * ```
      */
     boolean?: Arrayable<string>;
+
     /**
      * Arguments that should be parsed as strings. (even if they resemble a number)
      * @example
@@ -40,6 +41,7 @@ export declare interface Options {
      * ```
      */
     string?: Arrayable<string>;
+
     /**
      * Arguments that should be parsed as numbers.
      * @example
@@ -58,6 +60,7 @@ export declare interface Options {
      * ```
      */
     number?: Arrayable<string>;
+
     /**
      * Arguments that should be parsed as arrays.
      * @example
@@ -76,6 +79,7 @@ export declare interface Options {
      * ```
      */
     array?: Arrayable<string>;
+
     /**
      * Set default values.
      * @example
@@ -93,6 +97,7 @@ export declare interface Options {
      * ```
      */
     default?: Mapped<Arrayable<any>>;
+
     /**
      * Set aliases of options.
      * @example
@@ -111,16 +116,27 @@ export declare interface Options {
      * ```
      */
     alias?: Mapped<Arrayable<string>>;
+
     /**
-     * Should values that look like numbers be parsed into them.
-     * This doesn't apply to strings.
-     *
+     * Populate `'--'` property in `Argv` with everything after double-dash (`--`, aka. end-of-flags).\
+     * Default: `false`
+     * @example
+     * `--foo 1 -- --baz test`:
+     * ```js
+     * { foo: 1, '--': ['--baz', 'test'] }
+     * ```
+     */
+    'populate--'?: boolean;
+
+    /**
+     * Should values that look like numbers be parsed into them.\
+     * This doesn't apply to strings.\
      * Default: `true`
      */
     parseNumber?: boolean;
+
     /**
-     * Should a group of short options be treated as seperate flags.
-     *
+     * Should a group of short options be treated as seperate flags.\
      * Default: `true`
      * @example
      * `-abc`:
@@ -129,9 +145,9 @@ export declare interface Options {
      * ```
      */
     shortFlagGroup?: boolean;
+
     /**
-     * Convert results to camel-case.
-     *
+     * Convert results to camel-case.\
      * Default: `false`
      * @example
      * `--test-case 1`:
@@ -140,9 +156,9 @@ export declare interface Options {
      * ```
      */
     camelize?: boolean;
+
     /**
-     * Custom synchronous function for parsing provided argument.
-     *
+     * Custom synchronous function for parsing provided argument.\
      * Default: `undefined`
      * @example
      * ```ts
@@ -162,9 +178,9 @@ export declare interface Options {
      * ```
      */
     coerce?: Mapped<(value: any) => any>;
+
     /**
-     * Callback function that runs whenever a parsed flag has not been defined in options.
-     *
+     * Callback function that runs whenever a parsed flag has not been defined in options.\
      * Default: `undefined`
      * @param {string} flag Unknown flag.
      * @example
@@ -187,14 +203,23 @@ export declare interface Options {
     unknown?: (flag: string) => any;
 }
 
-/**
- * Parsed arguments.
- */
-export declare type Argv = Anyable<string> & {
+declare type ArgvBase = Anyable<string> & {
     /**
      * Arguments that weren't associated with any option.
      */
     _: string[];
 }
+
+declare type ArgvPopulated<T extends boolean | undefined> = T extends true ? ArgvBase & {
+    /**
+     * Everything after `'--'` (end-of-flags) is treated as an argument and is stored here.\
+     * Requires `'populate--'` option to be set to `true`.
+     * @see https://unix.stackexchange.com/questions/11376/what-does-double-dash-mean
+     */
+    '--': string[];
+} : ArgvBase;
+
+/** Parsed arguments. */
+export declare type Argv<T extends Options['populate--'] = false> = ArgvPopulated<T>;
 
 export type { Arrayable, Mapped };

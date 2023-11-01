@@ -95,7 +95,7 @@ function getAlias(val: string, alias: Mapped<Arrayable<string>>): string | undef
  * }
  * ```
  */
-export function parse<T extends Options>(args: Arrayable<string>, options: T): Argv<T['populate--'] extends boolean ? T['populate--'] : false> {
+export function parse<T extends Options>(args: Arrayable<string>, options = {} as T): Argv<T['populate--'] extends boolean ? T['populate--'] : false> {
     options = { ...defaultOptions, ...options };
 
     const result: Argv = { _: [] };

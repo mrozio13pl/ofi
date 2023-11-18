@@ -1,3 +1,6 @@
+/** Regex to replace quotemark. */
+export const QUOTES_REGEX = /(^"|"$)/g;
+
 /**
  * Check if a value is a flag. (e.g., `-f`, `--option`, `--option=value`)
  * @param {string} str String to check.

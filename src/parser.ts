@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Argv, Options, Arrayable, Mapped } from './types';
-import { isFlag, isLongFlag, isShortFlag, toKebabCase, isNumericLike, toCamelCase } from './utils';
+import { isFlag, isLongFlag, isShortFlag, toKebabCase, isNumericLike, toCamelCase, QUOTES_REGEX } from './utils';
 
 /**
  * Default options.
@@ -20,6 +20,7 @@ const defaultOptions = {
  */
 function parseValue(val: any, options: Options): any {
     if (options.parseNumber && isNumericLike(val)) return Number.parseFloat(val);
+    if (typeof val === 'string') return val.replace(QUOTES_REGEX, '');
 
     return val;
 }
@@ -107,7 +108,7 @@ export function parse<T extends Options>(args: Arrayable<string>, options = {} a
     // get every single flag
     const flags = [...Object.keys(defaults), ...Object.keys(coerce), ...Object.values(options).flat().filter(val => typeof(val) === 'string')].map(toCamelCase);
 
-    if (typeof(args) === 'string') args = args.match(/"([^"]+)"|(\S+)/g)?.map(arg => arg.replaceAll(/(^"|"$)/g, '')) || args.split(/(\s+)/);
+    if (typeof(args) === 'string') args = args.match(/"([^"]+)"|(\S+)/g) || args.split(/(\s+)/);
 
     // this is meant to filter out eg. empty spaces
     args = args.filter(Boolean);
@@ -123,10 +124,13 @@ export function parse<T extends Options>(args: Arrayable<string>, options = {} a
      * @returns {string | undefined}
      */
     function getNext(): string | undefined {
+        // look for quotes
+        let isQuoted;
+        if (/^"(.*)"$/.test(args[i])) isQuoted = true;
         if (arg.split('=')[1]) return arg.split('=')[1];
-        if (args[i + 1] && !isFlag(args[i + 1])) {
+        if (args[i + 1] && (!isFlag(args[i + 1]) || isQuoted)) {
             i++; // skip key
-            return args[i];
+            return args[i].replaceAll(QUOTES_REGEX, '');
         }
     }
 

@@ -186,7 +186,7 @@ export function parse<T extends Options>(args: Arrayable<string>, options = {} a
                 }
 
                 while (!!args[i + 1] && !isFlag(args[i + 1])) {
-                    if (!Array.isArray(result[opt])) result[opt] = [];
+                    if (!Array.isArray(result[res])) result[res] = [];
                     i++;
                     result[res].push(parseValue(args[i], options));
                 }

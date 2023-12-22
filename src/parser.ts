@@ -130,7 +130,7 @@ export function parse<T extends Options>(args: Arrayable<string>, options = {} a
         if (arg.split('=')[1]) return arg.split('=')[1];
         if (args[i + 1] && (!isFlag(args[i + 1]) || isQuoted)) {
             i++; // skip key
-            return args[i].replaceAll(QUOTES_REGEX, '');
+            return args[i].replace(QUOTES_REGEX, '');
         }
     }
 
@@ -143,7 +143,7 @@ export function parse<T extends Options>(args: Arrayable<string>, options = {} a
             result._.push(parseValue(args[i], options));
             continue;
         }
-        if (typeof(options.unknown) === 'function' && !getAlias(arg, alias) && !flags.includes(arg.replaceAll('-', ''))) {
+        if (typeof(options.unknown) === 'function' && !getAlias(arg, alias) && !flags.includes(arg.replace(/-/g, ''))) {
             options.unknown(args[i].split('=')[0]);
         }
         if (isLongFlag(arg)) {
@@ -206,7 +206,7 @@ export function parse<T extends Options>(args: Arrayable<string>, options = {} a
             }
 
             // leave only alphabetical (including other languages) and numerical characters
-            arg = arg.replaceAll(/[^\dA-Za-z\u00C0-\u1FFF\u2C00-\uD7FF]/g, '');
+            arg = arg.replace(/[^\dA-Za-z\u00C0-\u1FFF\u2C00-\uD7FF]/g, '');
 
             // An arg like `-abc` will return `{ a: true, b: true, c: true}`.
             for (let j = 0; j < arg.length; j++) {

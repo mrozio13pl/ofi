@@ -34,7 +34,7 @@ export function isLongFlag(str: string): boolean {
  * @returns {string}
  */
 export function toKebabCase(str: string): string {
-    return str.replaceAll(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+    return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 }
 
 /**
@@ -43,7 +43,7 @@ export function toKebabCase(str: string): string {
  * @returns {string}
  */
 export function toCamelCase(str: string): string {
-    return str.replaceAll('-', ' ').replaceAll(/^\w|[A-Z]|\b\w|\s+/g, (ltr, idx) => idx === 0 ? ltr.toLowerCase() : ltr.toUpperCase()).replaceAll(/\s+/g, '');
+    return str.replace(/-/g, ' ').replace(/^\w|[A-Z]|\b\w|\s+/g, (ltr, idx) => idx === 0 ? ltr.toLowerCase() : ltr.toUpperCase()).replace(/\s+/g, '');
 }
 
 /**

@@ -16,6 +16,9 @@
   "repository": "mrozio13pl/ofi",
   "author": "mrozio13pl",
   "license": "MIT",
+  "engines": {
+    "node": ">=12"
+  },
   "scripts": {
     "build": "tsup src/index.ts --clean --dts --minify --format esm,cjs && node scripts/size.mjs",
     "test": "uvu test .test.js$ && npm publish --dry-run"

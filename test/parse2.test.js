@@ -1,6 +1,6 @@
 const { test } = require('uvu');
 const assert = require('uvu/assert');
-const { parse } = require('../dist');
+const { parse } = require('../src');
 
 function parser(args) {
     return parse(args.split(' ').slice(2), {

@@ -1,6 +1,6 @@
 const { test } = require('uvu');
 const assert = require('uvu/assert');
-const { parse } = require('../dist');
+const { parse } = require('../src');
 
 // arguments to parse
 const args = '--name=joe --surname mama --age 30';

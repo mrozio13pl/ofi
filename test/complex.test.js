@@ -1,6 +1,6 @@
 const { suite } = require('uvu');
 const assert = require('uvu/assert');
-const { parse } = require('../dist');
+const { parse } = require('../src');
 
 const test = suite('complex test');
 

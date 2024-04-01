@@ -26,7 +26,7 @@
   },
   "scripts": {
     "build": "tsup src/index.ts --clean --dts --minify --format esm,cjs && node scripts/size.mjs",
-    "test": "cross-env NODE_OPTIONS=\"-r ts-node/register\" uvu test .test.js$",
+    "test": "cross-env NODE_OPTIONS=\"-r ts-node/register\" c8 uvu test .test.js$",
     "lint": "npx publint && eslint .",
     "publish": "clean-publish"
   },
@@ -49,6 +49,7 @@
   "devDependencies": {
     "@mrozio/eslint-config": "^1.0.4",
     "@types/node": "^20",
+    "c8": "^9.1.0",
     "clean-publish": "^4.3.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.57.0",

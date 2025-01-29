@@ -22,6 +22,9 @@ Import:
 // ESM
 import { parse } from 'ofi';
 
+// or
+import ofi from 'ofi';
+
 // CJS
 const { parse } = require('ofi');
 ```
